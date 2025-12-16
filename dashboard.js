@@ -299,6 +299,16 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    function parseResume(resumeText) {
+  return {
+    name: resumeText.match(/name[:\-]?\s*(.*)/i)?.[1] || 'Not detected',
+    email: resumeText.match(/[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}/i)?.[0] || 'Not detected',
+    phone: resumeText.match(/\b\d{10}\b/)?.[0] || 'Not detected',
+    education: resumeText.match(/b\.?tech|m\.?tech|degree|university/i)?.[0] || 'Not detected',
+    skills: matchedKeywords.slice(0, 6).join(', ')
+  };
+}
+
 
     // Enhanced ATS Score calculation based on actual resume content
     function calculateATSScore(resumeText, designation) {
