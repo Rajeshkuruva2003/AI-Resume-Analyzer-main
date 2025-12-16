@@ -308,6 +308,38 @@ document.addEventListener('DOMContentLoaded', function() {
     skills: matchedKeywords.slice(0, 6).join(', ')
   };
 }
+const softSkills = ['communication', 'teamwork', 'leadership'];
+const technicalSkills = ['python','java','react','sql','docker'];
+
+function classifySkills(skills) {
+  return {
+    technical: skills.filter(s => technicalSkills.includes(s.toLowerCase())),
+    soft: skills.filter(s => softSkills.includes(s.toLowerCase())),
+    domain: skills.filter(s => !technicalSkills.includes(s.toLowerCase()) && !softSkills.includes(s.toLowerCase()))
+  };
+}
+function detectCareerGaps(resumeText) {
+  const years = resumeText.match(/\b(20\d{2}|19\d{2})\b/g);
+  if (!years || years.length < 2) return 'Insufficient data';
+
+  years.sort();
+  let gaps = [];
+  for (let i = 1; i < years.length; i++) {
+    if (years[i] - years[i-1] > 1) {
+      gaps.push(`${years[i-1]}–${years[i]}`);
+    }
+  }
+  return gaps.length ? gaps.join(', ') : 'No major gaps';
+}
+function readabilityScore(text) {
+  const words = text.split(' ').length;
+  const sentences = text.split('.').length;
+  return Math.round(206.835 - 1.015 * (words/sentences));
+}
+document.getElementById('scoreFeedback').innerText += 
+  ` | Readability Score: ${readabilityScore(resumeContent)}`;
+
+
 
 
     // Enhanced ATS Score calculation based on actual resume content
